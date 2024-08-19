@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 
 from store.models import Product
-from .models import Order, Payment, OrderProduct
+from .models import Order, OrderProduct
 from .forms import OrderForm
 import datetime
 from carts.models import Cart, CartItem
@@ -16,26 +16,18 @@ from carts.views import _cart_id
 # Create your views here.
 def payments(request, order_number):
     instance = Order.objects.all()
-    order = Order.objects.get(user=request.user, is_ordered=False, order_number=order_number)
-    payment = Payment(
-        user = request.user,
-        payment_id = order.order_number,
-        payment_method = 'Paypal',
-        amount_paid = '100$',
-        status = 'Completed',
-    )
-    payment.save()
-    order.payment = payment
+    order = Order.objects.get(is_ordered=False, order_number=order_number)
     order.is_ordered = True
     order.save()
 
     #Move the cart items to order product table
-    cart_items = CartItem.objects.filter(user=request.user)
+    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart_items = CartItem.objects.filter(cart=cart)
     for item in cart_items:
         order_product = OrderProduct()
         order_product.order_id = order.id
-        order_product.payment = payment
-        order_product.user_id = request.user.id
+        # order_product.payment = payment
+        # order_product.user_id = request.user.id
         order_product.product_id = item.product_id
         # variations=cart_item.variations,
         order_product.quantity = item.quantity
@@ -59,24 +51,25 @@ def payments(request, order_number):
         product.save()
 
     #Clear the cart
-    CartItem.objects.filter(user=request.user).delete()
+    CartItem.objects.filter(cart=cart).delete()
 
 
     #Send order recived email to customer
-    mail_subject = 'Thank you for your order!'
-    message = render_to_string('orders/order_received_email.html', {
-        'user': request.user,
-        'order': order,
-    })
-    to_email = request.user.email
-    send_email = EmailMessage(mail_subject, message, to=[to_email])
-    send_email.send()
+    # mail_subject = 'Thank you for your order!'
+    # message = render_to_string('orders/order_received_email.html', {
+    #     'user': request.user,
+    #     'order': order,
+    # })
+    # to_email = request.user.email
+    # send_email = EmailMessage(mail_subject, message, to=[to_email])
+    # send_email.send()
 
     #Send order number and transaction id back to js function
-    base_url = reverse('order_complete')
-    query_string1 = urlencode({'order_number': order_number, 'payment_id': order.payment.payment_id})
-    url = f'{base_url}?{query_string1}'
-    return redirect(url)
+    # base_url = reverse('order_complete')
+    # query_string1 = urlencode({'order_number': order_number, 'payment_id': order.payment.payment_id})
+    # url = f'{base_url}?{query_string1}'
+    return redirect('store')
+
 
 def place_order(request, total=0, quantity=0,):
     # current_user = request.user
