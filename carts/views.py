@@ -1,4 +1,4 @@
-
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product, Variation
 from .models import Cart, CartItem
@@ -126,7 +126,12 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         grand_total = 0
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        out_of_stock_items = []
+
         for cart_item in cart_items:
+            if cart_item.quantity > cart_item.product.stock:
+                messages.error(request, f'We are sorry! There are only {cart_item.product.stock} {cart_item.product.product_name} left!')
+                return redirect('cart')
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
         tax = (2 * total) / 100

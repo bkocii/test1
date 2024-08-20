@@ -18,13 +18,13 @@ def store(request, category_slug=None):
     if category_slug is not None:
         categories = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=categories, is_available=True)
-        paginator = Paginator(products, 1)
+        paginator = Paginator(products, 6)
         page = request.GET.get('page')
         paged_products = paginator.get_page(page)
         product_count = products.count()
     else:
         products = Product.objects.all().filter(is_available=True).order_by('id')
-        paginator = Paginator(products, 3)
+        paginator = Paginator(products, 6)
         page = request.GET.get('page')
         paged_products = paginator.get_page(page)
         product_count = products.count()
@@ -85,6 +85,7 @@ def submit_review(request, product_id):
         form = ReviewForm(request.POST)
         if form.is_valid():
             data = ReviewRating()
+            data.user = form.cleaned_data['user']
             data.subject = form.cleaned_data['subject']
             data.review = form.cleaned_data['review']
             data.rating = form.cleaned_data['rating']
@@ -92,7 +93,7 @@ def submit_review(request, product_id):
             data.product_id = product_id
             # data.user_id = request.user.id
             data.save()
-            messages.success(request, 'Thank you! Your review has been submitted.')
+            messages.success(request, '\n Thank you! Your review has been submitted.')
             return redirect(url)
         # try:
         #     review = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)

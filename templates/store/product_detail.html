@@ -109,6 +109,9 @@
 				<input type="radio" name="rating" id="rating2" value="1" required><label for="rating2" title="1"></label>
 				<input type="radio" name="rating" id="rating1" value="0.5" required><label for="rating1" title="0.5" class="half"></label>
 			</div>
+            <br>
+			Reviewer Name:
+			<input type="text" class="form-control" name="user">
 			<br>
 			Review Title:
 			<input type="text" class="form-control" name="subject">
@@ -150,7 +153,7 @@
 		<div class="icontext w-100">
 			<div class="text">
 				<span class="date text-muted float-md-right">{{review.updated_at}} </span>
-				<h6 class="mb-1">{{review.user.first_name}} {{review.user.last_name}}</h6>
+				<h6 class="mb-1">{{review.user}}</h6>
 				<div class="rating-star">
 					<span>
 						<i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>

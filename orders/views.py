@@ -1,4 +1,6 @@
+import time
 from urllib.parse import urlencode
+from django.contrib import messages
 
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect
@@ -43,8 +45,6 @@ def payments(request, order_number):
         order_product.save()
 
 
-
-
         #Reduce the quantity of the sold product
         product = Product.objects.get(id=item.product_id)
         product.stock -= item.quantity
@@ -68,6 +68,7 @@ def payments(request, order_number):
     # base_url = reverse('order_complete')
     # query_string1 = urlencode({'order_number': order_number, 'payment_id': order.payment.payment_id})
     # url = f'{base_url}?{query_string1}'
+    messages.success(request, 'Thank You. Your order was submitted.')
     return redirect('store')
 
 
@@ -134,8 +135,6 @@ def place_order(request, total=0, quantity=0,):
 
 def order_complete(request):
     order_number = request.GET.get('order_number')
-    transID = request.GET.get('payment_id')
-
     try:
         order = Order.objects.get(order_number=order_number, is_ordered=True)
         ordered_products = OrderProduct.objects.filter(order_id=order.id)
@@ -144,17 +143,14 @@ def order_complete(request):
         for i in ordered_products:
             subtotal += i.product_price * i.quantity
 
-        payment = Payment.objects.get(payment_id=transID)
         context = {
             'order': order,
             'ordered_products': ordered_products,
             'order_number': order.order_number,
-            'transID': payment,
-            'payment': payment,
             'subtotal': subtotal,
         }
         return render(request, 'orders/order_complete.html', context)
-    except (Payment.DoesNotExist, Order.DoesNotExist):
+    except Order.DoesNotExist:
         return redirect('home')
 
 
