@@ -13,14 +13,6 @@
 <!--		</li>-->
 <!--		<li class="nav-item dropdown">-->
 <!--			<a href="#" class="nav-link"> USD </a>-->
-<!--		</li>-->
-<!--    </ul>-->
-<!--    <ul class="navbar-nav">-->
-<!--		<li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>-->
-<!--		<li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>-->
-<!--	</ul> &lt;!&ndash; list-inline //  &ndash;&gt;-->
-<!--  </div> &lt;!&ndash; navbar-collapse .// &ndash;&gt;-->
-<!--</div> &lt;!&ndash; container //  &ndash;&gt;-->
 </nav>
 
 <section class="header-main border-bottom">
@@ -60,21 +52,6 @@
 	</div> <!-- col.// -->
 	<div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
 				<div class="d-flex justify-content-end mb-3 mb-lg-0">
-<!--					<div class="widget-header">-->
-<!--						{% if user.is_authenticated %}-->
-<!--						<small class="title text-muted">Welcome {{user.first_name}}!</small>-->
-<!--						<div>-->
-<!--							<a href="{% url 'dashboard' %}">Dashboard</a> <span class="dark-transp"> | </span>-->
-<!--							<a href="{% url 'logout' %}"> Log Out</a>-->
-<!--						</div>-->
-<!--						{% else %}-->
-<!--						<small class="title text-muted">Welcome user!</small>-->
-<!--						<div>-->
-<!--							<a href="{% url 'login' %}">Log In</a> <span class="dark-transp"> | </span>-->
-<!--							<a href="{% url 'register' %}"> Register</a>-->
-<!--						</div>-->
-<!--						{% endif %}-->
-<!--					</div>-->
 					<a href="{% url 'cart' %}" class="widget-header pl-3 ml-3">
 						<div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
 						<span class="badge badge-pill badge-danger notify">{{ cart_count }}</span>
@@ -84,6 +61,6 @@
 </div> <!-- row.// -->
 	</div> <!-- container.// -->
 </section> <!-- header-main .// -->
-
+</nav>
 
 </header> <!-- section-header.// -->

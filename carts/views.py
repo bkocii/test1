@@ -126,11 +126,12 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         grand_total = 0
         cart = Cart.objects.get(cart_id=_cart_id(request))
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-        out_of_stock_items = []
 
         for cart_item in cart_items:
-            if cart_item.quantity > cart_item.product.stock:
-                messages.error(request, f'We are sorry! There are only {cart_item.product.stock} {cart_item.product.product_name} left!')
+            product = Product.objects.get(product_name=cart_item.product.product_name)
+            if cart_item.quantity > product.stock:
+
+                messages.error(request, f'We are sorry! There are only {product.stock} {cart_item.product.product_name} left!')
                 return redirect('cart')
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
